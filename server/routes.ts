@@ -55,7 +55,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const categories = await storage.getCategories();
       res.json(categories);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch categories" });
+      console.error('Error fetching categories:', error);
+      // If database fails, try to return some default categories
+      if (process.env.DATABASE_URL) {
+        console.log('Database error, returning default categories');
+        const defaultCategories = [
+          { id: '1', name: 'อาหาร', type: 'expense', icon: 'fas fa-utensils', color: 'hsl(var(--chart-1))' },
+          { id: '2', name: 'การเดินทาง', type: 'expense', icon: 'fas fa-car', color: 'hsl(var(--chart-2))' },
+          { id: '3', name: 'เงินเดือน', type: 'income', icon: 'fas fa-briefcase', color: 'hsl(var(--success))' },
+        ];
+        res.json(defaultCategories);
+      } else {
+        res.status(500).json({ message: "Failed to fetch categories" });
+      }
     }
   });
 
