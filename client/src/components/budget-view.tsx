@@ -100,7 +100,7 @@ export default function BudgetView() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Budget Management</h2>
+        <h2 className="text-2xl font-bold">จัดการงบประมาณ</h2>
         <Select value={selectedMonth} onValueChange={setSelectedMonth}>
           <SelectTrigger className="w-48" data-testid="select-budget-month">
             <SelectValue />
@@ -125,7 +125,7 @@ export default function BudgetView() {
         {/* Budget vs Actual Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Budget vs Actual Spending</CardTitle>
+            <CardTitle>งบประมาณ เทียบกับ ค่าใช้จ่ายจริง</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-80">
@@ -140,7 +140,7 @@ export default function BudgetView() {
                     fontSize={12}
                   />
                   <YAxis />
-                  <Tooltip formatter={(value) => [`$${value}`, ""]} />
+                  <Tooltip formatter={(value) => [`฿${value}`, ""]} />
                   <Legend />
                   <Bar dataKey="Budget" fill="hsl(var(--primary))" name="Budget" />
                   <Bar dataKey="Spent" fill="hsl(var(--destructive))" name="Spent" />
@@ -153,14 +153,14 @@ export default function BudgetView() {
         {/* Create New Budget */}
         <Card>
           <CardHeader>
-            <CardTitle>Set Budget</CardTitle>
+            <CardTitle>ตั้งงบประมาณ</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="budget-category">Category</Label>
+              <Label htmlFor="budget-category">หมวดหมู่</Label>
               <Select value={newBudget.category} onValueChange={(value) => setNewBudget(prev => ({ ...prev, category: value }))}>
                 <SelectTrigger data-testid="select-new-budget-category">
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder="เลือกหมวดหมู่" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.filter(c => c.type === "expense").map(category => (
@@ -172,7 +172,7 @@ export default function BudgetView() {
               </Select>
             </div>
             <div>
-              <Label htmlFor="budget-amount">Monthly Budget Amount</Label>
+              <Label htmlFor="budget-amount">งบประมาณรายเดือน</Label>
               <Input
                 id="budget-amount"
                 type="number"
@@ -189,7 +189,7 @@ export default function BudgetView() {
               className="w-full"
               data-testid="button-create-budget"
             >
-              {createBudget.isPending ? "Creating..." : "Set Budget"}
+              {createBudget.isPending ? "กำลังตั้ง..." : "ตั้งงบประมาณ"}
             </Button>
           </CardContent>
         </Card>
@@ -198,7 +198,7 @@ export default function BudgetView() {
       {/* Budget Categories */}
       <Card>
         <CardHeader>
-          <CardTitle>Budget Overview</CardTitle>
+          <CardTitle>ภาพรวมงบประมาณ</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -208,7 +208,7 @@ export default function BudgetView() {
                   <div>
                     <h4 className="font-medium">{item.name}</h4>
                     <p className="text-sm text-muted-foreground">
-                      ${item.spent.toFixed(2)} / ${item.budget.toFixed(2)} budget
+                      ฿{item.spent.toLocaleString('th-TH', { minimumFractionDigits: 2 })} / ฿{item.budget.toLocaleString('th-TH', { minimumFractionDigits: 2 })} budget
                     </p>
                   </div>
                   <div className="text-right">
@@ -219,7 +219,7 @@ export default function BudgetView() {
                       {item.percentage.toFixed(1)}%
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      ${item.remaining.toFixed(2)} remaining
+                      ฿{item.remaining.toLocaleString('th-TH', { minimumFractionDigits: 2 })} remaining
                     </div>
                   </div>
                 </div>

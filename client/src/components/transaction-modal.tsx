@@ -79,12 +79,12 @@ export default function TransactionModal({ open, onOpenChange }: TransactionModa
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md" data-testid="dialog-transaction-modal">
         <DialogHeader>
-          <DialogTitle>Add Transaction</DialogTitle>
+          <DialogTitle>เพิ่มรายการ</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="transaction-date">Date</Label>
+            <Label htmlFor="transaction-date">วันที่</Label>
             <Input
               id="transaction-date"
               type="date"
@@ -96,11 +96,11 @@ export default function TransactionModal({ open, onOpenChange }: TransactionModa
           </div>
           
           <div>
-            <Label htmlFor="transaction-description">Description</Label>
+            <Label htmlFor="transaction-description">รายละเอียด</Label>
             <Input
               id="transaction-description"
               type="text"
-              placeholder="Enter description..."
+              placeholder="ป้อนรายละเอียด..."
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               required
@@ -110,24 +110,24 @@ export default function TransactionModal({ open, onOpenChange }: TransactionModa
           
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="transaction-type">Type</Label>
+              <Label htmlFor="transaction-type">ประเภท</Label>
               <Select 
                 value={formData.type} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, type: value, category: "" }))}
                 required
               >
                 <SelectTrigger data-testid="select-transaction-type">
-                  <SelectValue placeholder="Select type" />
+                  <SelectValue placeholder="เลือกประเภท" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="income">Income</SelectItem>
-                  <SelectItem value="expense">Expense</SelectItem>
+                  <SelectItem value="income">รายได้</SelectItem>
+                  <SelectItem value="expense">รายจ่าย</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div>
-              <Label htmlFor="transaction-category">Category</Label>
+              <Label htmlFor="transaction-category">หมวดหมู่</Label>
               <Select 
                 value={formData.category} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
@@ -135,7 +135,7 @@ export default function TransactionModal({ open, onOpenChange }: TransactionModa
                 disabled={!formData.type}
               >
                 <SelectTrigger data-testid="select-transaction-category">
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder="เลือกหมวดหมู่" />
                 </SelectTrigger>
                 <SelectContent>
                   {filteredCategories.map(category => (
@@ -149,7 +149,7 @@ export default function TransactionModal({ open, onOpenChange }: TransactionModa
           </div>
           
           <div>
-            <Label htmlFor="transaction-amount">Amount</Label>
+            <Label htmlFor="transaction-amount">จำนวน</Label>
             <Input
               id="transaction-amount"
               type="number"
@@ -169,14 +169,14 @@ export default function TransactionModal({ open, onOpenChange }: TransactionModa
               onClick={() => onOpenChange(false)}
               data-testid="button-cancel-transaction"
             >
-              Cancel
+ยกเลิก
             </Button>
             <Button 
               type="submit"
               disabled={createTransaction.isPending}
               data-testid="button-submit-transaction"
             >
-              {createTransaction.isPending ? "Adding..." : "Add Transaction"}
+              {createTransaction.isPending ? "กำลังเพิ่ม..." : "เพิ่มรายการ"}
             </Button>
           </div>
         </form>

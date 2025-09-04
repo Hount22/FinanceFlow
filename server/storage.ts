@@ -55,16 +55,16 @@ export class MemStorage implements IStorage {
 
   private initializeDefaultCategories() {
     const defaultCategories: Omit<Category, 'id'>[] = [
-      { name: "Food & Dining", type: "expense", icon: "fas fa-utensils", color: "hsl(var(--chart-1))" },
-      { name: "Transportation", type: "expense", icon: "fas fa-car", color: "hsl(var(--chart-2))" },
-      { name: "Housing", type: "expense", icon: "fas fa-home", color: "hsl(var(--chart-3))" },
-      { name: "Entertainment", type: "expense", icon: "fas fa-film", color: "hsl(var(--chart-4))" },
-      { name: "Utilities", type: "expense", icon: "fas fa-bolt", color: "hsl(var(--chart-5))" },
-      { name: "Healthcare", type: "expense", icon: "fas fa-heart", color: "hsl(var(--destructive))" },
-      { name: "Shopping", type: "expense", icon: "fas fa-shopping-cart", color: "hsl(var(--warning))" },
-      { name: "Salary", type: "income", icon: "fas fa-briefcase", color: "hsl(var(--success))" },
-      { name: "Freelance", type: "income", icon: "fas fa-laptop", color: "hsl(var(--success))" },
-      { name: "Investment", type: "income", icon: "fas fa-chart-line", color: "hsl(var(--success))" },
+      { name: "อาหาร", type: "expense", icon: "fas fa-utensils", color: "hsl(var(--chart-1))" },
+      { name: "การเดินทาง", type: "expense", icon: "fas fa-car", color: "hsl(var(--chart-2))" },
+      { name: "ที่อยู่อาศัย", type: "expense", icon: "fas fa-home", color: "hsl(var(--chart-3))" },
+      { name: "ความบันเทิง", type: "expense", icon: "fas fa-film", color: "hsl(var(--chart-4))" },
+      { name: "สาธารณูปโภค", type: "expense", icon: "fas fa-bolt", color: "hsl(var(--chart-5))" },
+      { name: "สุขภาพ", type: "expense", icon: "fas fa-heart", color: "hsl(var(--destructive))" },
+      { name: "ช้อปปิ้ง", type: "expense", icon: "fas fa-shopping-cart", color: "hsl(var(--warning))" },
+      { name: "เงินเดือน", type: "income", icon: "fas fa-briefcase", color: "hsl(var(--success))" },
+      { name: "งานฟรีแลนซ์", type: "income", icon: "fas fa-laptop", color: "hsl(var(--success))" },
+      { name: "การลงทุน", type: "income", icon: "fas fa-chart-line", color: "hsl(var(--success))" },
     ];
 
     defaultCategories.forEach(category => {

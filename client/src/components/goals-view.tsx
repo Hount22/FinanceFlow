@@ -138,30 +138,30 @@ export default function GoalsView() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Financial Goals</h2>
+        <h2 className="text-2xl font-bold">เป้าหมายทางการเงิน</h2>
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogTrigger asChild>
             <Button data-testid="button-new-goal">
-              <i className="fas fa-plus mr-2"></i>New Goal
+              <i className="fas fa-plus mr-2"></i>เป้าหมายใหม่
             </Button>
           </DialogTrigger>
           <DialogContent data-testid="dialog-new-goal">
             <DialogHeader>
-              <DialogTitle>Create Financial Goal</DialogTitle>
+              <DialogTitle>สร้างเป้าหมายทางการเงิน</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="goal-title">Goal Title</Label>
+                <Label htmlFor="goal-title">ชื่อเป้าหมาย</Label>
                 <Input
                   id="goal-title"
-                  placeholder="Emergency Fund"
+                  placeholder="กองทุนฉุกเฉิน"
                   value={newGoal.title}
                   onChange={(e) => setNewGoal(prev => ({ ...prev, title: e.target.value }))}
                   data-testid="input-goal-title"
                 />
               </div>
               <div>
-                <Label htmlFor="goal-amount">Target Amount</Label>
+                <Label htmlFor="goal-amount">เป้าหมายจำนวน</Label>
                 <Input
                   id="goal-amount"
                   type="number"
@@ -173,7 +173,7 @@ export default function GoalsView() {
                 />
               </div>
               <div>
-                <Label htmlFor="goal-deadline">Deadline (Optional)</Label>
+                <Label htmlFor="goal-deadline">กำหนดเวลา (ไม่บังคับ)</Label>
                 <Input
                   id="goal-deadline"
                   type="date"
@@ -183,7 +183,7 @@ export default function GoalsView() {
                 />
               </div>
               <div>
-                <Label htmlFor="goal-icon">Icon</Label>
+                <Label htmlFor="goal-icon">ไอคอน</Label>
                 <select
                   id="goal-icon"
                   className="w-full p-2 border border-input rounded-md bg-background"
@@ -204,7 +204,7 @@ export default function GoalsView() {
                 className="w-full"
                 data-testid="button-create-goal"
               >
-                {createGoal.isPending ? "Creating..." : "Create Goal"}
+                {createGoal.isPending ? "กำลังสร้าง..." : "สร้างเป้าหมาย"}
               </Button>
             </div>
           </DialogContent>
@@ -237,7 +237,7 @@ export default function GoalsView() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Progress</span>
+                  <span className="text-muted-foreground">ความคืบหน้า</span>
                   <span className="font-medium" data-testid={`text-goal-progress-${goal.title.toLowerCase().replace(/ /g, '-')}`}>
                     ${parseFloat(goal.currentAmount).toFixed(2)} / ${parseFloat(goal.targetAmount).toFixed(2)}
                   </span>
@@ -256,7 +256,7 @@ export default function GoalsView() {
                     <Input
                       type="number"
                       step="0.01"
-                      placeholder="Add amount"
+                      placeholder="เพิ่มจำนวน"
                       className="flex-1"
                       id={`add-amount-${goal.id}`}
                       data-testid={`input-add-amount-${goal.title.toLowerCase().replace(/ /g, '-')}`}
@@ -272,7 +272,7 @@ export default function GoalsView() {
                       }}
                       data-testid={`button-add-amount-${goal.title.toLowerCase().replace(/ /g, '-')}`}
                     >
-                      Add
+                      เพิ่ม
                     </Button>
                   </div>
                 </div>
@@ -285,10 +285,10 @@ export default function GoalsView() {
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center min-h-[250px]">
             <i className="fas fa-plus text-4xl text-muted-foreground mb-3"></i>
-            <h4 className="font-semibold mb-2">Add New Goal</h4>
-            <p className="text-sm text-muted-foreground mb-4">Set a new financial target</p>
+            <h4 className="font-semibold mb-2">เพิ่มเป้าหมายใหม่</h4>
+            <p className="text-sm text-muted-foreground mb-4">ตั้งเป้าหมายทางการเงินใหม่</p>
             <Button onClick={() => setIsModalOpen(true)} data-testid="button-add-goal-card">
-              Create Goal
+              สร้างเป้าหมาย
             </Button>
           </CardContent>
         </Card>

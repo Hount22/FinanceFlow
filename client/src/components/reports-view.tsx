@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTransactions } from "@/hooks/use-transactions";
 import { useCategories } from "@/hooks/use-categories";
+import { useQuery } from "@tanstack/react-query";
 import { 
   ResponsiveContainer, 
   LineChart, 
@@ -21,6 +22,11 @@ import {
 export default function ReportsView() {
   const { data: transactions = [] } = useTransactions();
   const { data: categories = [] } = useCategories();
+  
+  // Fetch tax calculation data
+  const { data: taxData } = useQuery({
+    queryKey: ["/api/tax-calculation"],
+  });
 
   const spendingTrendsData = useMemo(() => {
     const last6Months = Array.from({ length: 6 }, (_, i) => {
@@ -102,7 +108,7 @@ export default function ReportsView() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Financial Reports</h2>
+        <h2 className="text-2xl font-bold">รายงานการเงิน</h2>
       </div>
 
       {/* Key Metrics */}
@@ -111,9 +117,9 @@ export default function ReportsView() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Net Income</p>
+                <p className="text-sm text-muted-foreground">รายได้สุทธิ</p>
                 <p className={`text-2xl font-bold ${monthlyStats.netIncome >= 0 ? 'text-success' : 'text-destructive'}`} data-testid="text-net-income">
-                  {monthlyStats.netIncome >= 0 ? '+' : ''}${monthlyStats.netIncome.toFixed(2)}
+                  {monthlyStats.netIncome >= 0 ? '+' : ''}฿{monthlyStats.netIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 })}
                 </p>
               </div>
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
@@ -129,7 +135,7 @@ export default function ReportsView() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Transactions</p>
+                <p className="text-sm text-muted-foreground">รายการ</p>
                 <p className="text-2xl font-bold" data-testid="text-transaction-count">{monthlyStats.transactionCount}</p>
               </div>
               <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
@@ -143,8 +149,8 @@ export default function ReportsView() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Avg Transaction</p>
-                <p className="text-2xl font-bold" data-testid="text-avg-transaction">${monthlyStats.avgTransaction.toFixed(2)}</p>
+                <p className="text-sm text-muted-foreground">เฉลี่ยต่อรายการ</p>
+                <p className="text-2xl font-bold" data-testid="text-avg-transaction">฿{monthlyStats.avgTransaction.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</p>
               </div>
               <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
                 <i className="fas fa-calculator text-accent-foreground"></i>
@@ -157,7 +163,7 @@ export default function ReportsView() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Savings Rate</p>
+                <p className="text-sm text-muted-foreground">อัตราการออม</p>
                 <p className="text-2xl font-bold text-success" data-testid="text-savings-rate">
                   {monthlyStats.totalIncome > 0 
                     ? ((monthlyStats.netIncome / monthlyStats.totalIncome) * 100).toFixed(1)
@@ -177,7 +183,7 @@ export default function ReportsView() {
         {/* Spending Trends */}
         <Card>
           <CardHeader>
-            <CardTitle>Income vs Expenses Trend</CardTitle>
+            <CardTitle>แนวโน้มรายได้ และ รายจ่าย</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-80">
@@ -186,7 +192,7 @@ export default function ReportsView() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip formatter={(value) => [`$${value}`, ""]} />
+                  <Tooltip formatter={(value) => [`฿${value}`, ""]} />
                   <Legend />
                   <Line 
                     type="monotone" 
@@ -218,7 +224,7 @@ export default function ReportsView() {
         {/* Category Breakdown */}
         <Card>
           <CardHeader>
-            <CardTitle>Expense Categories (This Month)</CardTitle>
+            <CardTitle>หมวดหมู่ค่าใช้จ่าย (เดือนนี้)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-80">
@@ -238,7 +244,7 @@ export default function ReportsView() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`$${value}`, ""]} />
+                  <Tooltip formatter={(value) => [`฿${value}`, ""]} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -249,7 +255,7 @@ export default function ReportsView() {
       {/* Monthly Comparison */}
       <Card>
         <CardHeader>
-          <CardTitle>6-Month Comparison</CardTitle>
+          <CardTitle>เปรียบเทียบ 6 เดือน</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-80">
@@ -258,15 +264,108 @@ export default function ReportsView() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip formatter={(value) => [`$${value}`, ""]} />
+                <Tooltip formatter={(value) => [`฿${value}`, ""]} />
                 <Legend />
-                <Bar dataKey="Income" fill="hsl(var(--success))" name="Income" />
-                <Bar dataKey="Expenses" fill="hsl(var(--destructive))" name="Expenses" />
+                <Bar dataKey="Income" fill="hsl(var(--success))" name="รายได้" />
+                <Bar dataKey="Expenses" fill="hsl(var(--destructive))" name="รายจ่าย" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>
+
+      {/* Thai Tax Calculation */}
+      {taxData && (
+        <Card>
+          <CardHeader>
+            <CardTitle>การคำนวณภาษีเงินได้บุคคลธรรมดา (ปี {taxData.year})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Tax Summary */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-lg">สรุปการคำนวณภาษี</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                    <span>รายได้ต่อปี:</span>
+                    <span className="font-mono font-bold">฿{taxData.annualIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                    <span>รายได้หลังหักลดหย่อน:</span>
+                    <span className="font-mono font-bold">฿{taxData.taxableIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-destructive/10 rounded-lg">
+                    <span>ภาษีที่ต้องชำระ:</span>
+                    <span className="font-mono font-bold text-destructive">฿{taxData.taxAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-warning/10 rounded-lg">
+                    <span>ประกันสังคม:</span>
+                    <span className="font-mono font-bold text-warning">฿{taxData.socialSecurity.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-success/10 rounded-lg">
+                    <span>รายได้สุทธิต่อปี:</span>
+                    <span className="font-mono font-bold text-success">฿{taxData.netIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <h5 className="font-medium mb-3">เฉลี่ยต่อเดือน</h5>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="text-center p-3 bg-muted/20 rounded-lg">
+                      <p className="text-sm text-muted-foreground">รายได้รวม</p>
+                      <p className="font-mono font-bold">฿{taxData.monthlyAverage.grossIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</p>
+                    </div>
+                    <div className="text-center p-3 bg-muted/20 rounded-lg">
+                      <p className="text-sm text-muted-foreground">รายได้สุทธิ</p>
+                      <p className="font-mono font-bold text-success">฿{taxData.monthlyAverage.netIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</p>
+                    </div>
+                    <div className="text-center p-3 bg-muted/20 rounded-lg">
+                      <p className="text-sm text-muted-foreground">ภาษี</p>
+                      <p className="font-mono font-bold text-destructive">฿{taxData.monthlyAverage.tax.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</p>
+                    </div>
+                    <div className="text-center p-3 bg-muted/20 rounded-lg">
+                      <p className="text-sm text-muted-foreground">ประกันสังคม</p>
+                      <p className="font-mono font-bold text-warning">฿{taxData.monthlyAverage.socialSecurity.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tax Brackets */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-lg">อัตราภาษีแบบขั้นบันได</h4>
+                <div className="space-y-2">
+                  {taxData.taxBrackets && taxData.taxBrackets.length > 0 ? (
+                    taxData.taxBrackets.map((bracket, index) => (
+                      <div key={index} className="flex justify-between items-center p-3 border rounded-lg">
+                        <div>
+                          <span className="text-sm">{bracket.range}</span>
+                          <p className="text-xs text-muted-foreground">{bracket.rate}%</p>
+                        </div>
+                        <span className="font-mono font-bold">฿{bracket.amount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-muted-foreground text-center py-4">ไม่มีภาษีที่ต้องชำระ</p>
+                  )}
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                  <h5 className="font-medium mb-2 text-blue-800 dark:text-blue-200">ข้อมูลการลดหย่อน</h5>
+                  <div className="text-sm space-y-1 text-blue-700 dark:text-blue-300">
+                    <p>• ค่าลดหย่อนส่วนตัว: ฿{taxData.deductions.personal.toLocaleString('th-TH')}</p>
+                    <p>• ประกันสังคม: ฿{taxData.deductions.socialSecurity.toLocaleString('th-TH')}</p>
+                    <p>• กองทุนสำรองเลี้ยงชีพ: ฿{taxData.deductions.providentFund.toLocaleString('th-TH')}</p>
+                    <p className="text-xs mt-2 text-blue-600 dark:text-blue-400">
+                      * การคำนวณนี้เป็นเพียงการประมาณการ ควรปรึกษาผู้เชี่ยวชาญด้านภาษีเพื่อความแม่นยำ
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

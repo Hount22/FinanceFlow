@@ -95,7 +95,7 @@ export default function TransactionTable() {
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-muted-foreground">Loading transactions...</div>
+        <div className="text-muted-foreground">กำลังโหลดข้อมูล...</div>
       </div>
     );
   }
@@ -139,12 +139,12 @@ export default function TransactionTable() {
         <div className="bg-card">
           {/* Header Row */}
           <div className="grid grid-cols-6 bg-muted/50 sticky top-0 z-10">
-            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">Date</div>
-            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">Description</div>
-            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">Category</div>
-            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">Type</div>
-            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50 text-right">Amount</div>
-            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50 text-right">Balance</div>
+            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">วันที่</div>
+            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">รายละเอียด</div>
+            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">หมวดหมู่</div>
+            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50">ประเภท</div>
+            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50 text-right">จำนวน</div>
+            <div className="table-cell p-3 font-medium text-sm text-muted-foreground bg-muted/50 text-right">ยอดคงเหลือ</div>
           </div>
 
           {/* Transaction Rows */}
@@ -194,8 +194,8 @@ export default function TransactionTable() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="expense">Expense</SelectItem>
-                    <SelectItem value="income">Income</SelectItem>
+                    <SelectItem value="expense">รายจ่าย</SelectItem>
+                    <SelectItem value="income">รายได้</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -214,7 +214,7 @@ export default function TransactionTable() {
               <div className="table-cell">
                 <div className="p-3 text-right font-mono text-sm text-foreground flex items-center justify-between">
                   <span data-testid={`text-balance-${index}`}>
-                    ${runningBalances[index]?.toFixed(2) || '0.00'}
+                    ฿{runningBalances[index]?.toLocaleString('th-TH', { minimumFractionDigits: 2 }) || '0.00'}
                   </span>
                   <Button
                     variant="ghost"
@@ -236,10 +236,10 @@ export default function TransactionTable() {
       <div className="bg-card border-t border-border p-4">
         <div className="grid grid-cols-6 text-sm">
           <div className="col-span-4"></div>
-          <div className="text-right font-medium text-foreground">Total:</div>
+          <div className="text-right font-medium text-foreground">รวม:</div>
           <div className="text-right font-bold font-mono" data-testid="text-total-balance">
             <span className={runningBalances[runningBalances.length - 1] >= 0 ? 'text-success' : 'text-destructive'}>
-              {runningBalances[runningBalances.length - 1] >= 0 ? '+' : ''}${runningBalances[runningBalances.length - 1]?.toFixed(2) || '0.00'}
+              {runningBalances[runningBalances.length - 1] >= 0 ? '+' : ''}฿{runningBalances[runningBalances.length - 1]?.toLocaleString('th-TH', { minimumFractionDigits: 2 }) || '0.00'}
             </span>
           </div>
         </div>

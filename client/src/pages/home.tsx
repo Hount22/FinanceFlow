@@ -31,28 +31,28 @@ export default function Home() {
                     className="px-4 py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none"
                     data-testid="tab-transactions"
                   >
-                    <i className="fas fa-exchange-alt mr-2"></i>Transactions
+                    <i className="fas fa-exchange-alt mr-2"></i>รายการเงิน
                   </TabsTrigger>
                   <TabsTrigger 
                     value="budget" 
                     className="px-4 py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none"
                     data-testid="tab-budget"
                   >
-                    <i className="fas fa-chart-pie mr-2"></i>Budget
+                    <i className="fas fa-chart-pie mr-2"></i>งบประมาณ
                   </TabsTrigger>
                   <TabsTrigger 
                     value="reports" 
                     className="px-4 py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none"
                     data-testid="tab-reports"
                   >
-                    <i className="fas fa-chart-bar mr-2"></i>Reports
+                    <i className="fas fa-chart-bar mr-2"></i>รายงาน
                   </TabsTrigger>
                   <TabsTrigger 
                     value="goals" 
                     className="px-4 py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none"
                     data-testid="tab-goals"
                   >
-                    <i className="fas fa-target mr-2"></i>Goals
+                    <i className="fas fa-target mr-2"></i>เป้าหมาย
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -87,7 +87,7 @@ export default function Home() {
               data-testid="mobile-tab-transactions"
             >
               <i className="fas fa-exchange-alt text-sm mb-1"></i>
-              <span className="text-xs">Transactions</span>
+              <span className="text-xs">รายการเงิน</span>
             </button>
             <button 
               onClick={() => setActiveTab("budget")}
@@ -95,7 +95,7 @@ export default function Home() {
               data-testid="mobile-tab-budget"
             >
               <i className="fas fa-chart-pie text-sm mb-1"></i>
-              <span className="text-xs">Budget</span>
+              <span className="text-xs">งบประมาณ</span>
             </button>
             <button 
               onClick={() => setActiveTab("reports")}
@@ -103,7 +103,7 @@ export default function Home() {
               data-testid="mobile-tab-reports"
             >
               <i className="fas fa-chart-bar text-sm mb-1"></i>
-              <span className="text-xs">Reports</span>
+              <span className="text-xs">รายงาน</span>
             </button>
             <button 
               onClick={() => setActiveTab("goals")}
@@ -111,7 +111,7 @@ export default function Home() {
               data-testid="mobile-tab-goals"
             >
               <i className="fas fa-target text-sm mb-1"></i>
-              <span className="text-xs">Goals</span>
+              <span className="text-xs">เป้าหมาย</span>
             </button>
           </div>
         </div>

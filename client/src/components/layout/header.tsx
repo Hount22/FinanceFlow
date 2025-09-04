@@ -12,7 +12,7 @@ export default function Header({ onNewTransaction }: HeaderProps) {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <i className="fas fa-chart-line text-primary-foreground text-sm"></i>
           </div>
-          <h1 className="text-xl font-semibold text-foreground">Personal Finance Manager</h1>
+          <h1 className="text-xl font-semibold text-foreground">จัดการการเงินส่วนตัว</h1>
         </div>
         <div className="flex items-center space-x-3">
           <Button 
@@ -21,14 +21,14 @@ export default function Header({ onNewTransaction }: HeaderProps) {
             className="text-muted-foreground hover:text-foreground"
             data-testid="button-export"
           >
-            <i className="fas fa-download mr-2"></i>Export
+            <i className="fas fa-download mr-2"></i>ส่งออก
           </Button>
           <Button 
             onClick={onNewTransaction}
             size="sm"
             data-testid="button-new-transaction"
           >
-            <i className="fas fa-plus mr-2"></i>New Transaction
+            <i className="fas fa-plus mr-2"></i>รายการใหม่
           </Button>
         </div>
       </div>

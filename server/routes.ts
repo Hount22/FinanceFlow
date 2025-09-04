@@ -138,6 +138,125 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Tax calculation utility functions for Thailand
+  function calculateThaiTax(annualIncome: number): {
+    taxableIncome: number;
+    taxAmount: number;
+    netIncome: number;
+    socialSecurity: number;
+    deductions: {
+      personal: number;
+      spouse: number;
+      children: number;
+      parents: number;
+      socialSecurity: number;
+      providentFund: number;
+    };
+    taxBrackets: Array<{
+      range: string;
+      rate: number;
+      amount: number;
+    }>;
+  } {
+    // ค่าลดหย่อนมาตรฐาน (ปี 2567)
+    const personalDeduction = 60000; // ค่าลดหย่อนส่วนตัว
+    const spouseDeduction = 60000;   // ค่าลดหย่อนคู่สมรส
+    const childDeduction = 30000;    // ค่าลดหย่อนบุตร (คนละ)
+    const parentDeduction = 30000;   // ค่าลดหย่อนบิดามารดา (คนละ)
+    
+    // ประกันสังคม 5% สูงสุด 15,000 บาท/ปี
+    const socialSecurity = Math.min(annualIncome * 0.05, 15000);
+    
+    // กองทุนสำรองเลี้ยงชีพ (สมมติ 3% ของเงินเดือน)
+    const providentFund = Math.min(annualIncome * 0.03, 500000);
+    
+    const deductions = {
+      personal: personalDeduction,
+      spouse: 0, // จะคำนวณตามสถานะจริง
+      children: 0, // จะคำนวณตามจำนวนบุตรจริง
+      parents: 0, // จะคำนวณตามจำนวนบิดามารดาจริง
+      socialSecurity,
+      providentFund
+    };
+    
+    // คำนวณรายได้หลังหักลดหย่อน
+    const totalDeductions = personalDeduction + socialSecurity + providentFund;
+    const taxableIncome = Math.max(0, annualIncome - totalDeductions);
+    
+    // อัตราภาษีแบบขั้นบันได (ปี 2567)
+    const taxBrackets = [
+      { min: 0, max: 150000, rate: 0 },
+      { min: 150000, max: 300000, rate: 5 },
+      { min: 300000, max: 500000, rate: 10 },
+      { min: 500000, max: 750000, rate: 15 },
+      { min: 750000, max: 1000000, rate: 20 },
+      { min: 1000000, max: 2000000, rate: 25 },
+      { min: 2000000, max: 5000000, rate: 30 },
+      { min: 5000000, max: Infinity, rate: 35 }
+    ];
+    
+    let taxAmount = 0;
+    const bracketDetails: Array<{ range: string; rate: number; amount: number }> = [];
+    
+    for (const bracket of taxBrackets) {
+      if (taxableIncome > bracket.min) {
+        const taxableAtThisBracket = Math.min(taxableIncome, bracket.max) - bracket.min;
+        const taxAtThisBracket = taxableAtThisBracket * (bracket.rate / 100);
+        taxAmount += taxAtThisBracket;
+        
+        if (taxAtThisBracket > 0) {
+          bracketDetails.push({
+            range: `${bracket.min.toLocaleString()} - ${bracket.max === Infinity ? 'ขึ้นไป' : bracket.max.toLocaleString()}`,
+            rate: bracket.rate,
+            amount: taxAtThisBracket
+          });
+        }
+      }
+    }
+    
+    return {
+      taxableIncome,
+      taxAmount,
+      netIncome: annualIncome - taxAmount - socialSecurity,
+      socialSecurity,
+      deductions,
+      taxBrackets: bracketDetails
+    };
+  }
+
+  // Tax calculation API
+  app.get("/api/tax-calculation", async (req, res) => {
+    try {
+      const month = req.query.month as string || new Date().toISOString().slice(0, 7);
+      const year = month.split('-')[0];
+      
+      // ดึงรายได้ประจำปี
+      const transactions = await storage.getTransactions();
+      const yearlyTransactions = transactions.filter(t => 
+        t.date.startsWith(year) && t.type === "income"
+      );
+      
+      const annualIncome = yearlyTransactions
+        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+      
+      const taxCalculation = calculateThaiTax(annualIncome);
+      
+      res.json({
+        year: parseInt(year),
+        annualIncome,
+        ...taxCalculation,
+        monthlyAverage: {
+          grossIncome: annualIncome / 12,
+          netIncome: taxCalculation.netIncome / 12,
+          tax: taxCalculation.taxAmount / 12,
+          socialSecurity: taxCalculation.socialSecurity / 12
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to calculate tax" });
+    }
+  });
+
   // Analytics routes
   app.get("/api/analytics/summary", async (req, res) => {
     try {

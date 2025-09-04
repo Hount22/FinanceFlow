@@ -13,14 +13,14 @@ export default function Sidebar() {
     <aside className="w-80 bg-card border-r border-border flex flex-col">
       {/* Summary Cards */}
       <div className="p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Overview</h2>
+        <h2 className="text-lg font-semibold text-foreground">ภาพรวม</h2>
         <div className="grid grid-cols-1 gap-3">
           <Card className="bg-background rounded-lg p-4 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">This Month</p>
+                <p className="text-sm text-muted-foreground">เดือนนี้</p>
                 <p className="text-2xl font-bold text-success" data-testid="text-monthly-balance">
-                  {summary?.balance >= 0 ? '+' : ''}${summary?.balance?.toFixed(2) || '0.00'}
+                  {summary?.balance >= 0 ? '+' : ''}฿{summary?.balance?.toLocaleString('th-TH', { minimumFractionDigits: 2 }) || '0.00'}
                 </p>
               </div>
               <div className="w-10 h-10 bg-success/10 rounded-full flex items-center justify-center">
@@ -32,9 +32,9 @@ export default function Sidebar() {
           <Card className="bg-background rounded-lg p-4 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Income</p>
+                <p className="text-sm text-muted-foreground">รายได้รวม</p>
                 <p className="text-xl font-semibold text-success" data-testid="text-total-income">
-                  ${summary?.totalIncome?.toFixed(2) || '0.00'}
+                  ฿{summary?.totalIncome?.toLocaleString('th-TH', { minimumFractionDigits: 2 }) || '0.00'}
                 </p>
               </div>
               <div className="w-8 h-8 bg-success/10 rounded-full flex items-center justify-center">
@@ -46,9 +46,9 @@ export default function Sidebar() {
           <Card className="bg-background rounded-lg p-4 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Expenses</p>
+                <p className="text-sm text-muted-foreground">ค่าใช้จ่ายรวม</p>
                 <p className="text-xl font-semibold text-destructive" data-testid="text-total-expenses">
-                  -${summary?.totalExpenses?.toFixed(2) || '0.00'}
+                  -฿{summary?.totalExpenses?.toLocaleString('th-TH', { minimumFractionDigits: 2 }) || '0.00'}
                 </p>
               </div>
               <div className="w-8 h-8 bg-destructive/10 rounded-full flex items-center justify-center">
@@ -61,7 +61,7 @@ export default function Sidebar() {
 
       {/* Categories */}
       <div className="p-6 flex-1">
-        <h3 className="text-md font-semibold text-foreground mb-4">Categories</h3>
+        <h3 className="text-md font-semibold text-foreground mb-4">หมวดหมู่</h3>
         <div className="space-y-2">
           {Object.entries(summary?.categoryBreakdown || {}).map(([category, amount]) => {
             const categoryData = categories.find(c => c.name === category);
@@ -76,7 +76,7 @@ export default function Sidebar() {
                   </span>
                 </div>
                 <span className="text-sm font-mono text-destructive">
-                  -${(amount as number).toFixed(2)}
+                  -฿{(amount as number).toLocaleString('th-TH', { minimumFractionDigits: 2 })}
                 </span>
               </div>
             );
